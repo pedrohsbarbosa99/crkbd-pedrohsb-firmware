@@ -22,8 +22,8 @@ jobs:
           sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi python3-pip git
           git clone --branch master https://github.com/qmk/qmk_firmware.git
           cd qmk_firmware
-          pip3 install -r requirements.txt
-          pip3 install qmk
+          python3 -m pip install -r requirements.txt
+          python3 -m pip install qmk
 
       # 3️⃣ Copia os arquivos do seu keymap para o diretório do QMK
       - name: Copy your keymap
