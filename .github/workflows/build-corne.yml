@@ -21,18 +21,21 @@ jobs:
 
       - name: Clone QMK firmware
         run: |
-          git clone --branch master https://github.com/qmk/qmk_firmware.git
+          git clone --branch master https://github.com/qmk/qmk_firmware.git qmk_firmware
           cd qmk_firmware
           util/qmk_install.sh
 
-      - name: Build Corne firmware
+      - name: Copy your keymap
+        run: |
+          cp -r $GITHUB_WORKSPACE/* qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
+
+      - name: Build firmware
         run: |
           cd qmk_firmware
-          qmk compile -kb crkbd/rev1 -km default
+          qmk compile -kb crkbd/rev1 -km pedrohsb
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
           name: corne-firmware
-          path: qmk_firmware/crkbd_rev1_default.hex
-
+          path: qmk_firmware/crkbd_rev1_pedrohsb.hex
