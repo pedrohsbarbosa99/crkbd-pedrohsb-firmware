@@ -11,20 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Clonar seu repositório
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Instalar dependências do QMK
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi git
+          sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi python3-pip git
+          pip3 install qmk
 
+      # 3️⃣ Clonar QMK firmware oficial
       - name: Clone QMK firmware
         run: |
           git clone --branch master https://github.com/qmk/qmk_firmware.git qmk_firmware
           cd qmk_firmware
           util/qmk_install.sh
 
+      # 4️⃣ Criar pasta do keymap e copiar arquivos do seu repo
       - name: Copy your keymap
         run: |
           mkdir -p qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb
@@ -32,12 +37,13 @@ jobs:
           cp $GITHUB_WORKSPACE/config.h qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/rules.mk qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
 
-
+      # 5️⃣ Build firmware
       - name: Build firmware
         run: |
           cd qmk_firmware
-          qmk compile -kb crkbd/rev1 -km pedrohsb
+          python3 -m qmk compile -kb crkbd/rev1 -km pedrohsb
 
+      # 6️⃣ Upload do firmware gerado como artifact
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
