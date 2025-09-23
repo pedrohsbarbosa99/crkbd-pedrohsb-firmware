@@ -11,34 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Clonar o seu repositório
+      # 1️⃣ Clona o seu repositório
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Instalar dependências e clonar o QMK Firmware
-      - name: Install dependencies and clone QMK
+      # 2️⃣ Instala as dependências e o QMK
+      - name: Setup QMK build environment
         run: |
           sudo apt update
           sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi python3-pip git
           git clone --branch master https://github.com/qmk/qmk_firmware.git
           cd qmk_firmware
-          python3 -m pip install -r requirements.txt
-          
-      # 3️⃣ Criar a pasta do keymap e copiar os arquivos do seu repositório
+          pip3 install -r requirements.txt
+
+      # 3️⃣ Copia os arquivos do seu keymap para o diretório do QMK
       - name: Copy your keymap
         run: |
           mkdir -p qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb
           cp $GITHUB_WORKSPACE/keymap.c qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/config.h qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/rules.mk qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
-
-      # 4️⃣ Construir o firmware
+          
+      # 4️⃣ Constrói o firmware usando a chamada completa do QMK CLI
       - name: Build firmware
         run: |
           cd qmk_firmware
-          qmk compile -kb crkbd/rev1 -km pedrohsb
+          python3 -m qmk.cli compile -kb crkbd/rev1 -km pedrohsb
 
-      # 5️⃣ Upload do firmware gerado como artifact
+      # 5️⃣ Faz o upload do arquivo .hex gerado
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
