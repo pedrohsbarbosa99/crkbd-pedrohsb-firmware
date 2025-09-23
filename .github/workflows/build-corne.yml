@@ -19,8 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi python3-pip git
-          pip3 install qmk
+          sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi git python3-pip
 
       # 3️⃣ Clonar QMK firmware oficial
       - name: Clone QMK firmware
@@ -37,11 +36,11 @@ jobs:
           cp $GITHUB_WORKSPACE/config.h qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/rules.mk qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
 
-      # 5️⃣ Build firmware
+      # 5️⃣ Build firmware usando o script do firmware
       - name: Build firmware
         run: |
           cd qmk_firmware
-          python3 -m qmk compile -kb crkbd/rev1 -km pedrohsb
+          ./qmk compile -kb crkbd/rev1 -km pedrohsb
 
       # 6️⃣ Upload do firmware gerado como artifact
       - name: Upload firmware artifact
