@@ -34,7 +34,7 @@ jobs:
       - name: Copy your keymap
         run: |
           mkdir -p qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb
-          cp $GITHUB_WORKSPACE/* qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
+          cp -r $GITHUB_WORKSPACE/* qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
 
       # 4️⃣ Compila o firmware
       - name: Build firmware
