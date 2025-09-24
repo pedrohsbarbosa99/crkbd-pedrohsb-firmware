@@ -20,10 +20,16 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi python3-pip git
+          
+          # Clona o QMK Firmware
           git clone --branch master https://github.com/qmk/qmk_firmware.git
           cd qmk_firmware
+          
+          # Instala dependências Python do QMK
           python3 -m pip install -r requirements.txt
-          python3 -m pip install qmk
+          
+          # Instala o QMK CLI direto do repositório oficial
+          python3 -m pip install git+https://github.com/qmk/qmk_cli.git
 
       # 3️⃣ Copia os arquivos do seu keymap para o diretório do QMK
       - name: Copy your keymap
@@ -33,11 +39,11 @@ jobs:
           cp $GITHUB_WORKSPACE/config.h qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/rules.mk qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           
-      # 4️⃣ Constrói o firmware usando a chamada completa do QMK CLI
+      # 4️⃣ Constrói o firmware usando o QMK CLI
       - name: Build firmware
         run: |
           cd qmk_firmware
-          python3 -m qmk.cli compile -kb crkbd/rev1 -km pedrohsb
+          python3 -m qmk compile -kb crkbd/rev1 -km pedrohsb
 
       # 5️⃣ Faz o upload do arquivo .hex gerado
       - name: Upload firmware artifact
