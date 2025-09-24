@@ -27,8 +27,8 @@ jobs:
           # Adiciona o binário do usuário ao PATH
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-          # Clona o firmware QMK
-          git clone --branch master https://github.com/qmk/qmk_firmware.git
+          # Clona o QMK Firmware com submódulos (resolve erro do LUFA)
+          git clone --branch master --recurse-submodules https://github.com/qmk/qmk_firmware.git
 
       # 3️⃣ Copia os arquivos do seu keymap
       - name: Copy your keymap
