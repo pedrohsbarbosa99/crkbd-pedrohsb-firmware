@@ -11,41 +11,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Clona o seu repositório
+      # 1️⃣ Clonar seu repositório
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Instala as dependências e o QMK
-      - name: Setup QMK build environment
+      # 2️⃣ Instalar dependências do QMK
+      - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y dfu-util gcc-avr avr-libc gcc-arm-none-eabi python3-pip git
-          
-          # Clona o QMK Firmware
-          git clone --branch master https://github.com/qmk/qmk_firmware.git
-          cd qmk_firmware
-          
-          # Instala dependências Python do QMK
-          python3 -m pip install -r requirements.txt
-          
-          # Instala o QMK CLI direto do repositório oficial
-          python3 -m pip install git+https://github.com/qmk/qmk_cli.git
 
-      # 3️⃣ Copia os arquivos do seu keymap para o diretório do QMK
+      # 3️⃣ Instalar QMK CLI via pip
+      - name: Install QMK CLI
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install qmk
+
+      # 4️⃣ Clonar QMK firmware oficial
+      - name: Clone QMK firmware
+        run: |
+          git clone --branch master https://github.com/qmk/qmk_firmware.git qmk_firmware
+
+      # 5️⃣ Criar pasta do keymap e copiar arquivos do seu repo
       - name: Copy your keymap
         run: |
           mkdir -p qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb
           cp $GITHUB_WORKSPACE/keymap.c qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/config.h qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/rules.mk qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
-          
-      # 4️⃣ Constrói o firmware usando o QMK CLI
+
+      # 6️⃣ Build firmware usando QMK CLI
       - name: Build firmware
         run: |
           cd qmk_firmware
           python3 -m qmk compile -kb crkbd/rev1 -km pedrohsb
 
-      # 5️⃣ Faz o upload do arquivo .hex gerado
+      # 7️⃣ Upload do firmware gerado como artifact
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
