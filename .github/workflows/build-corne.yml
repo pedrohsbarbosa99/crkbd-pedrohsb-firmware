@@ -30,11 +30,16 @@ jobs:
           # Clona o QMK Firmware com submódulos (resolve erro do LUFA)
           git clone --branch master --recurse-submodules https://github.com/qmk/qmk_firmware.git
 
-      # 3️⃣ Copia os arquivos do seu keymap
+      # 3️⃣ Copia apenas os arquivos do seu keymap
       - name: Copy your keymap
         run: |
           mkdir -p qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb
-          cp -r $GITHUB_WORKSPACE/* qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
+          
+          # Copia apenas os arquivos do keymap (substitua se tiver outros)
+          cp $GITHUB_WORKSPACE/keymap.c qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
+          cp $GITHUB_WORKSPACE/config.h qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
+          # Se tiver outros arquivos, adicione aqui
+          # cp -r $GITHUB_WORKSPACE/<pasta_ou_arquivo> qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
 
       # 4️⃣ Compila o firmware
       - name: Build firmware
