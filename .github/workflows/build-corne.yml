@@ -38,6 +38,7 @@ jobs:
           # Copia apenas os arquivos do keymap (substitua se tiver outros)
           cp $GITHUB_WORKSPACE/keymap.c qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           cp $GITHUB_WORKSPACE/config.h qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
+          cp $GITHUB_WORKSPACE/oled.c qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
           # Se tiver outros arquivos, adicione aqui
           # cp -r $GITHUB_WORKSPACE/<pasta_ou_arquivo> qmk_firmware/keyboards/crkbd/rev1/keymaps/pedrohsb/
 
